@@ -25,11 +25,13 @@ ChatModel.find((err, result) => {
 
 io.on("connection", socket => {
 	socket.emit('loggedIn', {
-		users: users.map(s => s.username),
+		users: users.map(next => next.username),
 		messages: messages
 	});
+	
 
 	socket.on('newuser', username => {
+		console.log(JSON.stringify(username))
 		console.log(`${username} Join in the party.`);
 		socket.username = username;
 		

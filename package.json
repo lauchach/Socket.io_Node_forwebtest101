@@ -7,7 +7,8 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
-    "express": "*",
+    "add": "^2.0.6",
+    "express": "^4.17.1",
     "mongoose": "^5.4.13",
     "socket.io": "*"
   },
