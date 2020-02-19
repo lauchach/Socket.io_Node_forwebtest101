@@ -4,9 +4,13 @@ const io = require("socket.io")(http);
 const mongoose = require("mongoose");
 let users = [];
 let messages = [];
-var time = new Date(); 
+// var time = new Date().getTime()
+var moment = require('moment')
+let timex = moment().format('h:mm a')
+let dateday = moment().format('DD-MM-YYYY') 
 const { crtime } = require('./utils/crtime')
-
+// const items = this.users
+// const copy = []
 
 
 mongoose.connect("mongodb://localhost:27017/chatapp");
@@ -24,13 +28,32 @@ ChatModel.find((err, result) => {
 
 	messages = result;
 });
+function a () {
+	console.log('this.users//a',this.users)
+	var items = this.users
+    const copy = []
+	for (let i = 0; i < this.users.length; i++) {
+		copy.push(this.users[i])
+	  }
+	  return{
+		  users: users
+	  }
+}
 
 io.on("connection", socket => {
 	socket.emit('loggedIn', {
-		users: users.map(next => next.username),    //	
+		users: a(),    //	
 		messages: messages,
-		time: time.getTime()
+		time: timex,
+		date: dateday
 	});
+// io.on("connection", socket => {
+// 	socket.emit('loggedIn', {
+// 		users: users.map(next => next.username),    //	
+// 		messages: messages,
+// 		time: timex,
+// 		date: dateday
+// 	});
 	// console.log(createdAt)
 
 	socket.on('newuser', username => {
@@ -47,7 +70,7 @@ io.on("connection", socket => {
 		let message = new ChatModel({
 			username: socket.username,
 			msg: msg,
-			time: time.getTime()
+			time: timex
 		});
 
 		message.save((err, result) => {
