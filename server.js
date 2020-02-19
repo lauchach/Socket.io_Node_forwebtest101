@@ -4,12 +4,7 @@ const io = require("socket.io")(http);
 const mongoose = require("mongoose");
 let users = [];
 let messages = [];
-const now = new Date()
-var d = new Date(); // for now
-d.getHours(); // => 9
-d.getMinutes(); // =>  30
-d.getSeconds(); // => 51
-// let time = [];
+var time = new Date(); 
 const { crtime } = require('./utils/crtime')
 
 
@@ -18,9 +13,8 @@ mongoose.connect("mongodb://localhost:27017/chatapp");
 
 const ChatSchema = mongoose.Schema({
 	username: String,
-	msg: String
-	// ,
-	// time: 
+	msg: String,
+	time: String
 });
 
 const ChatModel = mongoose.model("chat", ChatSchema);
@@ -35,7 +29,7 @@ io.on("connection", socket => {
 	socket.emit('loggedIn', {
 		users: users.map(next => next.username),    //	
 		messages: messages,
-		createdAt: now.getTime()
+		time: time.getTime()
 	});
 	// console.log(createdAt)
 
@@ -52,7 +46,8 @@ io.on("connection", socket => {
 	socket.on('msg', msg => {
 		let message = new ChatModel({
 			username: socket.username,
-			msg: msg
+			msg: msg,
+			time: time.getTime()
 		});
 
 		message.save((err, result) => {
