@@ -27,35 +27,11 @@ ChatModel.find((err, result) => {
 	if (err) throw err;
 
 	messages = result;
+	
 });
-function a () {
-	console.log('this.users//a',this.users)
-	var items = this.users
-    const copy = []
-	for (let i = 0; i < this.users.length; i++) {
-		copy.push(this.users[i])
-	  }
-	  return{
-		  users: users
-	  }
-}
+
 
 io.on("connection", socket => {
-	socket.emit('loggedIn', {
-		users: a(),    //	
-		messages: messages,
-		time: timex,
-		date: dateday
-	});
-// io.on("connection", socket => {
-// 	socket.emit('loggedIn', {
-// 		users: users.map(next => next.username),    //	
-// 		messages: messages,
-// 		time: timex,
-// 		date: dateday
-// 	});
-	// console.log(createdAt)
-
 	socket.on('newuser', username => {
 		console.log(JSON.stringify(username))
 		console.log(`${username} Join in the party.`);
@@ -64,6 +40,7 @@ io.on("connection", socket => {
 		users.push(socket);                                //******//
 
 		io.emit('userOnline', socket.username);
+		
 	});
 
 	socket.on('msg', msg => {
@@ -81,7 +58,26 @@ io.on("connection", socket => {
 			io.emit('msg', result);
 		});
 	});
-	
+	function a () {
+		console.log('this.users//a',messages)
+		var items = this.messages
+		const copy = []
+		for (let i = 0; i < this.messages; i++) {
+			copy.push(this.messages[i])
+		  }
+		  return{
+			messages: JSON.stringify(this.messages)
+		  }
+	}
+	console.log('this.users//a',a)
+	socket.emit('getResult', {
+			users: a(),    	
+			messages: messages,
+			time: timex,
+			date: dateday
+		});
+
+
 	// Disconnect
 	socket.on("disconnect", () => {
 		console.log(`${socket.username} Exit party.`);
