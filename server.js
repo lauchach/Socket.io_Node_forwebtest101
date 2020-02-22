@@ -12,7 +12,8 @@ mongoose.connect("mongodb://localhost:27017/chatapp");
 const ChatSchema = mongoose.Schema({
 	username: String,
 	msg: String,
-	time: String
+	time: String,
+	type: String
 });
 
 const ChatModel = mongoose.model("chat", ChatSchema);
@@ -22,7 +23,7 @@ ChatModel.find((err, result) => {
 
 	messages = result;
 });
-io.on("connection", socket => {
+io.on("connect", socket => {
 	socket.emit('loggedIn', {
 		users: users.map(s => s.username),
 		messages: messages
@@ -41,7 +42,8 @@ io.on("connection", socket => {
 		let message = new ChatModel({
 			username: socket.username,
             msg: msg,
-            time: timex
+			time: timex,
+			type: ''
 		});
 		message.save((err, result) => {
 			if (err) throw err;
