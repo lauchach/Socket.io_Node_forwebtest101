@@ -27,17 +27,15 @@ ChatModel.find((err, result) => {
 });
 
 function a () {
-	console.log('function a ()this.users////',users)
-	console.log('function a ()this.users////',users.length)
+	console.log('ทำ function a ()this.users////',users,'users.length',users.length)
 	var leng = users.length
 	for (var i = 0; i < leng; i++) { 
 		users.push(users[i])
 	}
 	// users.splice(users.length,users);
-	console.log('function a ()this.user////',)
 	const set = new Set(users);
 	var arrayuser = Array.from(set);
-			console.log('function a ()this.user////',arrayuser)
+			console.log('function a ()this.user//return arrayuser//',arrayuser)
  return arrayuser
 }
 
@@ -51,7 +49,7 @@ io.on('connection', socket => {
 		user = username;
 		
 		users.push(username);
-
+		
 		// x = a()
 		// console.log('x',x)
 		socket.emit('loggedIn', {
@@ -60,8 +58,10 @@ io.on('connection', socket => {
 			// users: users.map(s => s.username),
 			messages: messages
 		})
-
+		
 		socket.broadcast.emit('userOnline', users.username);
+		// let users = userx
+		// console.log('userx',userx) 
 	});
 	
 
@@ -91,7 +91,13 @@ io.on('connection', socket => {
     socket.on("logOut", () => {
 		console.log(`${socket.username} has left the party.`);
 		socket.broadcast.emit("userLeft", socket.username);
+
+
+		console.log('users.indexOf(users)',users.indexOf(users))
+		console.log('users.splice(users.indexOf(users), 1)',users.splice(users.indexOf(users), 1))
 		users.splice(users.indexOf(users), 1);
+
+		
 		console.log('this.userslogOut////',users)
 	});
 }); 	
