@@ -3,9 +3,11 @@ const http = require("http").Server(app);
 const io = require("socket.io")(http);
 const mongoose = require("mongoose");
 var moment = require('moment')
-let users = [];
+var users = [];
 let messages = [];
+var user = [];
 var timex = moment().format('LTS')
+// var arrayuser = Array.from(users);
 
 mongoose.connect("mongodb://localhost:27017/chatapp");
 
@@ -23,27 +25,45 @@ ChatModel.find((err, result) => {
 
 	messages = result;
 });
+
+function a () {
+	console.log('function a ()this.users////',users)
+	console.log('function a ()this.users////',users.length)
+	var leng = users.length
+	for (var i = 0; i < leng; i++) { 
+		users.push(users[i])
+	}
+	// users.splice(users.length,users);
+	console.log('function a ()this.user////',)
+	const set = new Set(users);
+	var arrayuser = Array.from(set);
+			console.log('function a ()this.user////',arrayuser)
+ return arrayuser
+}
+
+
+
 io.on('connection', socket => {
 	console.log('IO Connected')
-	// socket.emit('loggedIn', {
-	// 	users: users.map(s => s.username),
-	// 	messages: messages
-	// });
 
 	socket.on('newuser', username => {
-		console.log('1111')
-		// console.log(`${username} has arrived at the party.`);
-		socket.username = username;
+		console.log(`${username} has arrived at the party.`);
+		user = username;
 		
-		users.push(socket);
+		users.push(username);
 
-		// socket.broadcast.emit('userOnline', socket.username);
+		// x = a()
+		// console.log('x',x)
 		socket.emit('loggedIn', {
-			users: users.map(s => s.username),
+			users: a(),
+			// users: users,
+			// users: users.map(s => s.username),
 			messages: messages
-		});
-		socket.broadcast.emit('userOnline', socket.username);
+		})
+
+		socket.broadcast.emit('userOnline', users.username);
 	});
+	
 
 	socket.on('msg', msg => {
 		let message = new ChatModel({
@@ -65,12 +85,14 @@ io.on('connection', socket => {
 	socket.on("disconnect", () => {
 		console.log(`${socket.username} has left the party.`);
 		socket.broadcast.emit("userLeft", socket.username);
-		users.splice(users.indexOf(socket), 1);
+		users.splice(users.indexOf(users), 1);
+		console.log('this.usersdisconnect////',users)
     });
     socket.on("logOut", () => {
 		console.log(`${socket.username} has left the party.`);
 		socket.broadcast.emit("userLeft", socket.username);
-		users.splice(users.indexOf(socket), 1);
+		users.splice(users.indexOf(users), 1);
+		console.log('this.userslogOut////',users)
 	});
 }); 	
 

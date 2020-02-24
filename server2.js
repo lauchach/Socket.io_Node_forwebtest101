@@ -69,13 +69,13 @@ io.on("connection", socket => {
 		});
 	});
 	function a () {
-		// console.log('this.users//a',messages)
+		console.log('this.users//a',messages)
 		var items = this.messages
-		// const copy = []
+		const copy = []
 		for (let i = 0; i < this.messages; i++) {
 			copy.push(this.messages[i])
 		  }
-				// console.log('copy',copy)
+				console.log('copy',copy)
 	}
 	// console.log('this.users//a',JSON.stringify(messages))
 	socket.emit('getResult', {
