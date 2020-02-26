@@ -27,7 +27,7 @@ ChatModel.find((err, result) => {
 });
 
 function a () {
-	console.log('ทำ function a ()this.users////',users,'users.length',users.length)
+	// console.log('ทำ function a ()this.users////',users,'users.length',users.length)
 	var leng = users.length
 	for (var i = 0; i < leng; i++) { 
 		users.push(users[i])
@@ -42,24 +42,34 @@ function a () {
 
 
 io.on('connection', socket => {
+	
 	console.log('IO Connected')
-
+	
 	socket.on('newuser', username => {
 		console.log(`${username} has arrived at the party.`);
-		user = username;
-		
-		users.push(username);
+		users.push(username.username)
+		io.emit('userOnline', {
+			users: users,
+		})
+		// socket.broadcast.emit('userOnline', {
+		// 	users: a(),
+		// })
+		// eslint-disable-next-line no-console
+		console.log('push//users',users)
+
 		
 		// x = a()
 		// console.log('x',x)
 		socket.emit('loggedIn', {
-			users: a(),
+			// users: a(),
 			// users: users,
 			// users: users.map(s => s.username),
 			messages: messages
 		})
 		
-		socket.broadcast.emit('userOnline', users.username);
+		// socket.broadcast.emit('userOnline', {
+		// 	users: a(),
+		// })
 		// let users = userx
 		// console.log('userx',userx) 
 	});
@@ -83,21 +93,21 @@ io.on('connection', socket => {
 	
 	// Disconnect
 	socket.on("disconnect", () => {
-		console.log(`${socket.username} has left the party.`);
-		socket.broadcast.emit("userLeft", socket.username);
-		users.splice(users.indexOf(users), 1);
-		console.log('this.usersdisconnect////',users)
+		console.log(`${users} has left the party.`);
+		io.emit("userLeft", a());
+		users.splice(users.includes(users.username), []);
+		// users.splice(users.includes(users), 1);
+
+		console.log('this.usersdisconnect////',user)
     });
     socket.on("logOut", () => {
 		console.log(`${socket.username} has left the party.`);
 		socket.broadcast.emit("userLeft", socket.username);
-
-
-		console.log('users.indexOf(users)',users.indexOf(users))
-		console.log('users.splice(users.indexOf(users), 1)',users.splice(users.indexOf(users), 1))
-		users.splice(users.indexOf(users), 1);
-
+		users.splice(users.indexOf(socket), 1);
+		// users.splice(users.includes(users), 1);
 		
+		console.log('users.indexOf(users)',users.includes(users))
+		console.log('users.splice(users.indexOf(users), 1)',users.splice(users.indexOf(users), 1))
 		console.log('this.userslogOut////',users)
 	});
 }); 	
