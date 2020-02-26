@@ -3,11 +3,11 @@ const http = require("http").Server(app);
 const io = require("socket.io")(http);
 const mongoose = require("mongoose");
 var moment = require('moment')
-var users = [];
+var users = ['A', 'B', 'C'];
 let messages = [];
 var user = [];
 var timex = moment().format('LTS')
-
+var test = []
 
 mongoose.connect("mongodb://localhost:27017/chatapp");
 
@@ -53,11 +53,13 @@ io.on('connection', socket => {
 	})
 	socket.on('newuser', username => {
 		console.log(`${username} has arrived at the party.`,'>>>>>',users);
-		users.push(username.username)
-		const set = new Set(users);
-		var arrayuser = Array.from(set);
+		// users.push(username.username)
+		// const set = new Set(users);
+		// var arrayuser = Array.from(set);
+		// users = ['A', 'B', 'C']
 		io.emit('userOnline', {
-			users: arrayuser,
+			// users: arrayuser,
+			users: users
 		})
 
 
@@ -123,10 +125,10 @@ io.on('connection', socket => {
 			})
 		}),
 		socket.on("logOut", () => {
-			console.log(`${username} has left the party.`);
-			console.log('logOut ', username)
-			users.splice(users.includes(users), 1);
-			console.log('users ', users)
+			// console.log(`${username} has left the party.`);
+			// console.log('logOut ', username)
+			// users.splice(users.includes(users), 1);
+			// console.log('users ', users)
 			// io.emit("userLeft", socket.username);
 			// console.log('this.userslogOut////',users,users.splice(users.indexOf(username.username), 1))
 		});
@@ -138,12 +140,16 @@ io.on('connection', socket => {
 	
 	// Disconnect
 	socket.on("disconnect", () => {
-		console.log(`${users} has left the party.`);
+		// console.log(`${users} has left the party.`);
 		// users.splice(users.includes(users.username), []);
 		// users.splice(users.includes(users), 1);
-		console.log(socket.users)
-
-		console.log('this.usersdisconnect////',users)
+		for (let i = 0; i < users.length; i++) {
+			if (users[i] !== 'B') {
+				test.push(users[i])
+			}
+		}
+		users = [...test]
+		// console.log('this.usersdisconnect////',users)
     });
 }); 	
 
