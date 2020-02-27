@@ -7,7 +7,7 @@ var users = [];
 let messages = [];
 var user = [];
 var timex = moment().format('LTS')
-
+var test = []
 
 mongoose.connect("mongodb://localhost:27017/chatapp");
 
@@ -52,7 +52,7 @@ io.on('connection', socket => {
 		// })
 	})
 	socket.on('newuser', username => {
-		console.log(`${username} has arrived at the party.`,'>>>>>',users);
+		console.log(`${username} has arrived at the party.`,'>>>>>',users,'length',users.length);
 		users.push(username.username)
 		const set = new Set(users);
 		var arrayuser = Array.from(set);
@@ -122,11 +122,32 @@ io.on('connection', socket => {
 				io.emit('msg', result);
 			})
 		}),
-		socket.on("logOut", () => {
-			console.log(`${username} has left the party.`);
-			console.log('logOut ', username)
-			users.splice(users.includes(users), 1);
-			console.log('users ', users)
+		socket.on("logOut", (username) => {
+			console.log(`${username} has left the party.`,users);
+			let usersLength = username.length 
+
+
+
+
+			
+			console.log('usernameparam',username,'username.length',username.length)
+			for (let i = 0; i < users.length; i++) {
+				if (users[i] !== users.splice(users.indexOf(username),usersLength)) {
+					// this.users.splice(this.users.indexOf(user), 1)
+					test.push(users[i])
+				}
+			}
+			users = [...test]
+			io.emit('userLeft', {
+				users: arrayuser,
+			})
+			console.log(`${username} has arrived at the party.`,'>>>>>',users,'length',users.length);
+			// console.log('username.length>>>>>',users.length)
+
+
+			// console.log('logOut ', username)
+			// users.splice(users.includes(users), 1);
+			// console.log('users ', users)
 			// io.emit("userLeft", socket.username);
 			// console.log('this.userslogOut////',users,users.splice(users.indexOf(username.username), 1))
 		});
