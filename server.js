@@ -39,13 +39,18 @@ ChatModel.find((err, result) => {
 //  return arrayuser
 // }
 
+function b () {
+	users.push(username.username)
+}
 
 
 io.on('connection', socket => {
-	
-console.log('connection')
-	socket.on('newuser', username => {
-		console.log(`${username} Befor users.push(username.username)`,'>>>>>',users,'length',users.length);
+	console.log('users.push(username.username)','io.on connect',users,'length',users.length);
+
+socket.on('newuser', username => {
+	console.log('connection')
+	console.log(`${username} Befor users.push(username.username)`,'>>>>>',users,'length',users.length);
+
 		users.push(username.username)
 		console.log(`${username} `,'users.push(username.username)','>>>>>',users,'length',users.length);
 		const set = new Set(users);
@@ -54,6 +59,20 @@ console.log('connection')
 			users: arrayuser,
 			messages: messages
 		})
+	
+
+
+
+	// socket.on('newuser', username => {
+	// 	console.log(`${username} Befor users.push(username.username)`,'>>>>>',users,'length',users.length);
+	// 	users.push(username.username)
+	// 	console.log(`${username} `,'users.push(username.username)','>>>>>',users,'length',users.length);
+	// 	const set = new Set(users);
+	// 	var arrayuser = Array.from(set);
+	// 	io.emit('userOnline', {
+	// 		users: arrayuser,
+	// 		messages: messages
+	// 	})
 		// socket.emit('loggedIn', {
 		// 	// users: a(),
 		// 	// users: users,
@@ -84,21 +103,22 @@ console.log('connection')
 		socket.on("logOut", (username) => {
 			console.log(`${username} has left the party.`,users);
 
-			console.log('usernameparam',username,'username.length',username.length)
-			for (let i = 0; i < users.length; i++) {
-				if (users[i] !== users.splice(users.indexOf(username),1)) {
+			// console.log('usernameparam',username,'username.length',username.length)
+			
+			users.splice(users.indexOf(username),1)
 					// users.splice(this.users.indexOf(user), 1) 
-					test.push(users[i])
-				}
-			}
-			Ptes = [...test]
-			let Ptest = Ptes.filter(function(x){
-				return x !== undefined;
-			})
-			users = [...Ptest]
+					// test = users
+	
+			
+			// Ptes = [...test]
+			// let Ptest = Ptes.filter(function(x){
+			// 	return x !== undefined;
+			// })
+			// users = [...Ptest]
+			// console.log('users = [...Ptest]',users)
 			// users = [...test]
 			io.emit('userLeft', {
-				users: arrayuser,
+				users: username
 			})
 			console.log(`${username} has arrived at the party.`,'>>>>>',users,'length',users.length);
 			// console.log('username.length>>>>>',users.length)
